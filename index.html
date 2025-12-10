@@ -8,20 +8,63 @@
         body {
             font-family: Arial, sans-serif;
             height: 100vh;
-            background-image: url('background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        /* Fix for mobile devices - use scroll instead of fixed */
-        @media (max-width: 768px) {
-            body {
-                background-size: contain
+        /* Blurred background layer - zoomed in version of the image */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            right: -10%;
+            bottom: -10%;
+            background-image: url('background.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            filter: blur(20px);
+            transform: scale(1.1);
+            z-index: 0;
+        }
+
+        /* Sharp image layer on top */
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('background.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        /* Ensure content appears above the backgrounds */
+        body > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* For landscape orientation - fill the screen */
+        @media (orientation: landscape) {
+            body::after {
+                background-size: cover;
+            }
+        }
+
+        /* For portrait or square - contain the image */
+        @media (orientation: portrait) {
+            body::after {
+                background-size: contain;
             }
         }
     </style>
